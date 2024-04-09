@@ -1,7 +1,8 @@
-import { emailCheck, passwordCheck,visible } from "./input_check.js";
+import { validateEmailAddress, validatePassword,handleVisibility } from "./input_check.js";
 
 const Input = document.querySelector("form");
 const login_btn = document.querySelector(".login-form button");
+const error_message = document.querySelectorAll(".input-err-message");
 const eye = document.querySelector(".password-visible-btn");
 login_btn.setAttribute("disabled", true);
 let passwordValid = false;
@@ -12,10 +13,10 @@ Input.addEventListener("input", (event) => {
 
   switch (userInput.id) {
     case "userEmail":
-      emailValid = emailCheck(userInput);
+      emailValid = validateEmailAddress(userInput,error_message[0]);
       break;
     case "userPassword":
-      passwordValid = passwordCheck(userInput);
+      passwordValid = validatePassword(userInput,error_message[1]);
       break;
   }
 
@@ -33,5 +34,5 @@ login_btn.addEventListener("click", (event) => {
 
 
 eye.addEventListener("click",(event)=>{
-    visible(event.target);
+  handleVisibility(event.target);
 })

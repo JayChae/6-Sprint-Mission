@@ -55,14 +55,18 @@ main{
     color: var(--coolGray800);
 }
 .user-input{
-    position: relative;
+    
     margin-bottom: 2.4rem;
+}
+.user-input-section{
+    position: relative;
+    height: 9.3rem;
 }
 .password-visible-btn{
     width: 2.4rem;
     height: 2.4rem;
     position: absolute;
-    top: 55%;
+    top: 57%;
     right: 2.4rem;
     cursor: pointer;
     
