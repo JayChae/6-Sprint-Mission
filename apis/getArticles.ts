@@ -1,6 +1,6 @@
-import { baseAxios } from "./api";
+import { axiosInstance } from "./api";
 
-interface propTypes {
+interface GetArticleParams {
   page: number;
   pageSize: number;
   orderBy: string;
@@ -26,7 +26,7 @@ interface Articles {
   totalCount: number;
 }
 
-export type GetArticleType = (prop: propTypes) => Promise<Articles | undefined>;
+export type GetArticleType = (prop: GetArticleParams) => Promise<Articles>;
 
 const getArticle: GetArticleType = async ({
   page,
@@ -35,11 +35,12 @@ const getArticle: GetArticleType = async ({
   keyword,
 }) => {
   try {
-    const response = await baseAxios.get<Articles>(`articles`, {
+    const { data } = await axiosInstance.get<Articles>(`articles`, {
       params: { page, pageSize, orderBy, keyword },
     });
-    return response.data;
+    return data;
   } catch (error) {
+    console.error("APP ERROR: ", error);
     if (error instanceof Error) {
       throw new Error(`게시글을 가져오는 데 실패했습니다: ${error.message}`);
     }
