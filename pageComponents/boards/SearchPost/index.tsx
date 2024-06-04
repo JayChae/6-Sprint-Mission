@@ -8,6 +8,7 @@ import { FAVORITE, RECENT } from "@/constants/sortBy";
 import useLoad from "@/hooks/useLoad";
 import { getArticle } from "@/apis/getArticles";
 import useInfiniteScroll from "@/hooks/useInfiniteScroll";
+import { useRouter } from "next/router";
 
 interface ArticleType {
   id: number;
@@ -29,6 +30,7 @@ const SearchPost = () => {
   const [keyword, setKeyword] = useState("");
   const [page, setPage] = useState(1);
   const [isLoading, loadingError, handleLoad] = useLoad(getArticle);
+  const router = useRouter();
 
   const scrollAction = async () => {
     const nextPosts = await handleLoad({
@@ -80,6 +82,10 @@ const SearchPost = () => {
     }
   };
 
+  const handleWriteBtn = () => {
+    router.push("/newArticle");
+  };
+
   useEffect(() => {
     handlePostLoad();
   }, [order]);
@@ -88,7 +94,9 @@ const SearchPost = () => {
     <div className={styles.container}>
       <header>
         <h2 className={styles.title}>게시글</h2>
-        <button className={styles.write_btn}>글쓰기</button>
+        <button className={styles.write_btn} onClick={handleWriteBtn}>
+          글쓰기
+        </button>
       </header>
       <div className={styles.search}>
         <form className={styles.search_input} onSubmit={handleSearchSubmit}>
