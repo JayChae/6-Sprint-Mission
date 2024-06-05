@@ -8,6 +8,7 @@ interface PropType {
   onChange?: (event: ChangeEvent<HTMLTextAreaElement>) => void;
   id: string;
   name: string;
+  textAreaHeight: number;
 }
 
 const CustomTextArea = ({
@@ -17,6 +18,7 @@ const CustomTextArea = ({
   onChange,
   id,
   name,
+  textAreaHeight,
 }: PropType) => {
   return (
     <div className={styles.container}>
@@ -27,6 +29,7 @@ const CustomTextArea = ({
         placeholder={placeholder}
         value={value}
         onChange={onChange}
+        style={{ height: `${textAreaHeight}px` }}
       />
     </div>
   );

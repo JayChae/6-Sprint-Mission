@@ -1,6 +1,6 @@
 import { axiosInstance } from "./api";
 
-interface GetArticleParams {
+interface GetArticlesParams {
   page: number;
   pageSize: number;
   orderBy: string;
@@ -26,9 +26,9 @@ interface Articles {
   totalCount: number;
 }
 
-export type GetArticleType = (prop: GetArticleParams) => Promise<Articles>;
+export type GetArticleType = (prop: GetArticlesParams) => Promise<Articles>;
 
-const getArticle: GetArticleType = async ({
+const getArticles: GetArticleType = async ({
   page,
   pageSize,
   orderBy,
@@ -50,4 +50,4 @@ const getArticle: GetArticleType = async ({
   }
 };
 
-export { getArticle };
+export { getArticles };

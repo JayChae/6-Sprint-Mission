@@ -2,13 +2,12 @@ import CustomFileInput from "@/components/Inputs/CustomFileInput";
 import CustomInput from "@/components/Inputs/CustomInput";
 import CustomTextArea from "@/components/Inputs/CustomTextArea";
 
-const NewArticle = () => {
+const AddArticle = () => {
   return (
-    <div className="max-w-[122rem] h-screen px-[1rem] mx-auto my-0 flex flex-col gap-[2.4rem]">
-        
+    <div className="max-w-[122rem] h-screen px-[1rem] mx-auto my-[2.4rem] flex flex-col gap-[2.4rem]">
       <div className="flex justify-between">
         <h2 className="font-bold text-[2rem] leading-[2.4rem] my-auto mx-0">
-          게시글
+          게시글 쓰기
         </h2>
         <button className="py-[1.2rem] px-[2.3rem] rounded-[0.8rem] bg-gray-400 font-semibold text-[1.6rem] text-white leading-[1.9rem]">
           등록
@@ -26,10 +25,11 @@ const NewArticle = () => {
         placeholder="내용을 입력하세요"
         id="content"
         name="content"
+        textAreaHeight={200}
       />
       <CustomFileInput onDelete={() => {}} name="image" />
     </div>
   );
 };
 
-export default NewArticle;
+export default AddArticle;

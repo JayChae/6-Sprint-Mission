@@ -6,7 +6,7 @@ import Image from "next/image";
 import ic_search from "@/images/ic_search.svg";
 import { FAVORITE, RECENT } from "@/constants/sortBy";
 import useLoad from "@/hooks/useLoad";
-import { getArticle } from "@/apis/getArticles";
+import { getArticles } from "@/apis/getArticles";
 import useInfiniteScroll from "@/hooks/useInfiniteScroll";
 import { useRouter } from "next/router";
 
@@ -29,7 +29,7 @@ const SearchPost = () => {
   const [order, setOrder] = useState(RECENT);
   const [keyword, setKeyword] = useState("");
   const [page, setPage] = useState(1);
-  const [isLoading, loadingError, handleLoad] = useLoad(getArticle);
+  const [isLoading, loadingError, handleLoad] = useLoad(getArticles);
   const router = useRouter();
 
   const scrollAction = async () => {
@@ -83,7 +83,7 @@ const SearchPost = () => {
   };
 
   const handleWriteBtn = () => {
-    router.push("/newArticle");
+    router.push("/addArticle");
   };
 
   useEffect(() => {
