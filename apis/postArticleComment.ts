@@ -27,9 +27,15 @@ const postArticleComment: PostArticleComment = async ({
   content,
 }) => {
   try {
+    const accessToken = localStorage.getItem("accessToken");
     const { data } = await axiosInstance.post<Response>(
       `articles/${articleId}/comments`,
-      { content }
+      { content },
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
     );
     return data;
   } catch (error) {

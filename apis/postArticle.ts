@@ -1,7 +1,8 @@
 import { axiosInstance } from "./api";
+import postImage from "./postImage";
 
 interface PostArticleParams {
-  image: File | null;
+  image?: File | null;
   content: string;
   title: string;
 }
@@ -21,20 +22,46 @@ interface Response {
 }
 
 export type PostArticle = (prop: PostArticleParams) => Promise<Response>;
-//Post 요청일 경우 보통 리스폰스를 받아서 확인하나요?
 
 const postArticle: PostArticle = async ({ image, content, title }) => {
   try {
-    const { data } = await axiosInstance.post<Response>(`articles`, {
-      image,
-      content,
-      title,
-    });
-    return data;
+    const accessToken = localStorage.getItem("accessToken");
+    if (image) {
+      const imageUrl = await postImage({ image });
+      console.log(imageUrl);
+      const { data } = await axiosInstance.post<Response>(
+        `articles`,
+        {
+          image: imageUrl,
+          content,
+          title,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      return data;
+    } else {
+      const { data } = await axiosInstance.post<Response>(
+        `articles`,
+        {
+          content,
+          title,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      return data;
+    }
   } catch (error) {
     console.error("APP ERROR: ", error);
     if (error instanceof Error) {
-      throw new Error(`게시글을 등록할 수 없습니다`);
+      throw new Error(`게시글을 등록할 수 없습니다`, error);
     }
     throw new Error("알 수 없는 오류로 게시글을 등록할 수 없습니다.");
   }

@@ -3,6 +3,7 @@ import CustomFileInput from "@/components/Inputs/CustomFileInput";
 import CustomInput from "@/components/Inputs/CustomInput";
 import CustomTextArea from "@/components/Inputs/CustomTextArea";
 import RegisterButton from "@/components/RegisterButton";
+import { useRouter } from "next/router";
 import React, { ChangeEvent, useState } from "react";
 
 interface NewArticle {
@@ -12,6 +13,7 @@ interface NewArticle {
 }
 
 const AddArticle = () => {
+  const router = useRouter();
   const [newArticle, setNewArticle] = useState<NewArticle>({
     title: "",
     content: "",
@@ -61,10 +63,13 @@ const AddArticle = () => {
         content: newArticle.content,
         title: newArticle.title,
       });
+      alert("게시글을 등록하였습니다");
     } catch (error) {
       if (error instanceof Error) {
         alert(error.message);
       }
+    } finally {
+      router.push("/boards");
     }
   };
 

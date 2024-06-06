@@ -22,12 +22,17 @@ interface Response {
 export type PostArticleLike = (
   prop: PostArticleLikeParams
 ) => Promise<Response>;
-//Post 요청일 경우 보통 리스폰스를 받아서 확인하나요?
 
 const postArticleLike: PostArticleLike = async ({ articleId }) => {
   try {
+    const accessToken = localStorage.getItem("accessToken");
     const { data } = await axiosInstance.post<Response>(
-      `articles/${articleId}/like`
+      `articles/${articleId}/like`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
     );
     return data;
   } catch (error) {
