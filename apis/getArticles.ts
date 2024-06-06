@@ -26,9 +26,11 @@ interface Articles {
   totalCount: number;
 }
 
-export type GetArticleType = (prop: GetArticlesParams) => Promise<Articles>;
+export type GetArticlesType = (
+  prop: GetArticlesParams
+) => Promise<Articles | undefined>;
 
-const getArticles: GetArticleType = async ({
+const getArticles: GetArticlesType = async ({
   page,
   pageSize,
   orderBy,

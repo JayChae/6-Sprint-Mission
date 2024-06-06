@@ -1,9 +1,9 @@
 import HeartButton from "@/components/HeartButton";
 import Image from "next/image";
-import ic_kabab from "@/images/ic_kebab.svg";
 import ic_user from "@/images/ic_user.png";
 import formatTime from "@/utils/formatTime";
 import KebabButton from "@/components/KebabButton";
+import postArticleLike from "@/apis/postArticleLike";
 
 interface PropType {
   id: number;
@@ -25,6 +25,17 @@ const ArticleContent = ({
   nickname,
 }: PropType) => {
   const date = formatTime(updatedAt);
+
+  const handleHeartButton = async () => {
+    try {
+      await postArticleLike({ articleId: id });
+    } catch (error) {
+      if (error instanceof Error) {
+        window.alert(error.message);
+      }
+    }
+  };
+
   return (
     <div className="w-full flex flex-col gap-[1.6rem]">
       <div className="flex justify-between">
@@ -51,7 +62,7 @@ const ArticleContent = ({
         />
 
         <div className="flex items-center gap-[0.4rem]">
-          <HeartButton width={24} height={24} />
+          <HeartButton width={24} height={24} onClick={handleHeartButton} />
           <span className="font-normal text-[1.4rem] leading-[1.7rem] text-gray-500">
             {likeCount}
           </span>
