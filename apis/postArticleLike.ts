@@ -26,7 +26,7 @@ export type PostArticleLike = (
 
 const postArticleLike: PostArticleLike = async ({ articleId }) => {
   try {
-    const { data } = await axiosInstance.get<Response>(
+    const { data } = await axiosInstance.post<Response>(
       `articles/${articleId}/like`
     );
     return data;

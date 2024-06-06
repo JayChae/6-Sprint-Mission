@@ -5,7 +5,7 @@ interface RegisterButtonProp {
   height: number;
   disabled: boolean;
   children: string;
-  onClick: () => void;
+  onClick?: () => void;
 }
 
 const RegisterButton = ({

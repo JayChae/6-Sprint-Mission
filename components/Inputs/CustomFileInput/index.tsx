@@ -54,11 +54,7 @@ const CustomFileInput = ({ value, onChange, onDelete, name }: PropType) => {
         />
         {value && (
           <div className={styles.preview_section}>
-            <Image
-              src={preview}
-              alt="이미지 미리보기"
-              className={styles.image_preview}
-            />
+            <Image src={preview} alt="이미지 미리보기" fill />
             <Image
               src={deleteImgButton}
               alt="이미지 삭제"

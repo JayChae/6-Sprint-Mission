@@ -1,17 +1,87 @@
+import postArticle from "@/apis/postArticle";
 import CustomFileInput from "@/components/Inputs/CustomFileInput";
 import CustomInput from "@/components/Inputs/CustomInput";
 import CustomTextArea from "@/components/Inputs/CustomTextArea";
+import RegisterButton from "@/components/RegisterButton";
+import React, { ChangeEvent, useState } from "react";
+
+interface NewArticle {
+  title: string;
+  content: string;
+  image: File | null;
+}
 
 const AddArticle = () => {
+  const [newArticle, setNewArticle] = useState<NewArticle>({
+    title: "",
+    content: "",
+    image: null,
+  });
+  const buttonActivate = newArticle.title && newArticle.content;
+
+  const handleTitleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setNewArticle((prevValues: NewArticle) => ({
+      ...prevValues,
+      [name]: value,
+    }));
+  };
+  const handleContentChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setNewArticle((prevValues: NewArticle) => ({
+      ...prevValues,
+      [name]: value,
+    }));
+  };
+
+  //사진 입력
+  const upLoadImg = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, files } = e.target;
+
+    if (files && files.length > 0) {
+      setNewArticle((prevValues) => ({
+        ...prevValues,
+        [name]: files[0],
+      }));
+    }
+  };
+
+  //사진 삭제
+  const cancelUPLoadImg = () => {
+    setNewArticle((prevValues) => ({
+      ...prevValues,
+      image: null,
+    }));
+  };
+
+  const handleEnrollButton = async () => {
+    try {
+      await postArticle({
+        image: newArticle.image,
+        content: newArticle.content,
+        title: newArticle.title,
+      });
+    } catch (error) {
+      if (error instanceof Error) {
+        alert(error.message);
+      }
+    }
+  };
+
   return (
     <div className="max-w-[122rem] h-screen px-[1rem] mx-auto my-[2.4rem] flex flex-col gap-[2.4rem]">
       <div className="flex justify-between">
         <h2 className="font-bold text-[2rem] leading-[2.4rem] my-auto mx-0">
           게시글 쓰기
         </h2>
-        <button className="py-[1.2rem] px-[2.3rem] rounded-[0.8rem] bg-gray-400 font-semibold text-[1.6rem] text-white leading-[1.9rem]">
+        <RegisterButton
+          width={74}
+          height={42}
+          disabled={!buttonActivate}
+          onClick={handleEnrollButton}
+        >
           등록
-        </button>
+        </RegisterButton>
       </div>
 
       <CustomInput
@@ -19,6 +89,8 @@ const AddArticle = () => {
         placeholder="제목을 입력하세요"
         id="title"
         name="title"
+        value={newArticle.title}
+        onChange={handleTitleChange}
       />
       <CustomTextArea
         label="*내용"
@@ -26,8 +98,15 @@ const AddArticle = () => {
         id="content"
         name="content"
         textAreaHeight={200}
+        value={newArticle.content}
+        onChange={handleContentChange}
       />
-      <CustomFileInput onDelete={() => {}} name="image" />
+      <CustomFileInput
+        name="image"
+        value={newArticle.image}
+        onChange={upLoadImg}
+        onDelete={cancelUPLoadImg}
+      />
     </div>
   );
 };
