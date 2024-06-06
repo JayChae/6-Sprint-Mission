@@ -9,6 +9,7 @@ import { GetServerSidePropsContext } from "next";
 import getArticleComments from "@/apis/getArticleComments";
 import NoContentSign from "@/components/NoContentSign";
 import empty_sign from "@/images/Img_reply_empty.png";
+import postArticleComment from "@/apis/postArticleComment";
 
 interface ArticleType {
   updatedAt: string;
@@ -23,18 +24,20 @@ interface ArticleType {
   title: string;
   id: number;
 }
-interface ArticleComments {
-  list: {
+interface ArticleComment {
+  id: number;
+  content: string;
+  createdAt: string;
+  updatedAt: string;
+  writer: {
     id: number;
-    content: string;
-    createdAt: string;
-    updatedAt: string;
-    writer: {
-      id: number;
-      nickname: string;
-      image: string | null;
-    };
-  }[];
+    nickname: string;
+    image: string | null;
+  };
+}
+
+interface ArticleComments {
+  list: ArticleComment[];
   nextCursor: number;
 }
 
@@ -66,11 +69,28 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
 const ArticleDetail = ({ article, articleComments }: ArticleDetailProps) => {
   const { id, title, content, image, likeCount, updatedAt, writer } = article;
-  const comments = articleComments.list;
+  const [comments, setComments] = useState(articleComments.list);
   const [newComment, setNewComment] = useState("");
 
   const handleTextArea = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setNewComment(e.target.value);
+  };
+
+  const handleEnrollButton = async () => {
+    try {
+      const result = await postArticleComment({
+        articleId: id,
+        content: newComment,
+      });
+      const newComments = [result, ...comments];
+      setComments(newComments);
+    } catch (error) {
+      if (error instanceof Error) {
+        alert(error.message);
+      }
+    } finally {
+      setNewComment("");
+    }
   };
 
   useEffect(() => {}, []);
@@ -104,7 +124,7 @@ const ArticleDetail = ({ article, articleComments }: ArticleDetailProps) => {
             width={74}
             height={42}
             disabled={newComment === ""}
-            onClick={() => {}}
+            onClick={handleEnrollButton}
           >
             등록
           </RegisterButton>
