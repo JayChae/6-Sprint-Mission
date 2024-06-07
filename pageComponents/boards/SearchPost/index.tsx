@@ -107,7 +107,7 @@ const SearchPost = () => {
             width={24}
             height={24}
           />
-          <input name="search" placeholder="검색할 상품을 입력해주세요" />
+          <input name="search" placeholder="검색할 상품을 입력해주세요" type="search"/>
         </form>
 
         <div className={styles.selectOrderBtn}>
