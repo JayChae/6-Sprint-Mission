@@ -29,6 +29,8 @@ const ArticleContent = ({
   const handleHeartButton = async () => {
     try {
       await postArticleLike({ articleId: id });
+      window.alert("좋아요 성공");
+      window.location.reload();
     } catch (error) {
       if (error instanceof Error) {
         window.alert(error.message);

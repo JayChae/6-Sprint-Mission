@@ -28,6 +28,7 @@ const postArticleLike: PostArticleLike = async ({ articleId }) => {
     const accessToken = localStorage.getItem("accessToken");
     const { data } = await axiosInstance.post<Response>(
       `articles/${articleId}/like`,
+      {},
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
