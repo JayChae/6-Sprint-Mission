@@ -54,10 +54,11 @@ const Signin = () => {
         password: passWord,
       });
       // 결과에서 accessToken 가져오기
-      const accessToken = result.accessToken;
+      const { accessToken, refreshToken } = result;
 
       // 로컬 스토리지에 accessToken 저장
       localStorage.setItem("accessToken", accessToken);
+      localStorage.setItem("refreshToken", refreshToken);
       alert("로그인 성공");
       router.push("/");
     } catch (error) {

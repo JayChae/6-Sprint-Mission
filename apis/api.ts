@@ -1,4 +1,5 @@
 import axios from "axios";
+import postRefreshToken from "./postRefreshToken";
 const panda_market_backend_api = process.env.NEXT_PUBLIC_BASE_URL;
 
 const axiosInstance = axios.create({
@@ -12,7 +13,7 @@ if (typeof window !== "undefined") {
       const accessToken = localStorage.getItem("accessToken");
 
       if (!accessToken) return config;
-      config.headers.Authorization = `Bearer ${accessToken}`;;
+      config.headers.Authorization = `Bearer ${accessToken}`;
       return config;
     },
     (error) => {
@@ -24,7 +25,22 @@ if (typeof window !== "undefined") {
     (response) => {
       return response;
     },
-    (error) => {
+    async (error) => {
+      //토큰 만료
+      if (
+        error.response?.status === 401 &&
+        error.response.data.message === "jwt expired"
+      ) {
+        try {
+          await postRefreshToken();
+          const accessToken = localStorage.getItem("accessToken");
+          const originalRequest = error.config;
+          originalRequest.headers.Authorization = `Bearer ${accessToken}`;
+          return await axios(originalRequest);
+        } catch (refreshError) {
+          return Promise.reject(refreshError);
+        }
+      }
       alert(`에러발생: ${error.response.data.message} `);
       return Promise.reject(error);
     }
