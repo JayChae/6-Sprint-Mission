@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useState, useEffect } from "react";
 import ic_kakao from "@/images/ic_kakao.png";
 import ic_google from "@/images/ic_google.png";
 import ic_hidden from "@/images/btn_visibility_off.svg";
@@ -14,8 +14,11 @@ import Link from "next/link";
 import Image from "next/image";
 import styles from "@/pages/signin/style.module.css";
 import postSignup from "@/apis/postSignup";
-import { FormEvent } from 'react';
+import { FormEvent } from "react";
+import { useRouter } from "next/router";
+
 const Signup = () => {
+  const router = useRouter();
   const [email, setEmail] = useState<string>("");
   const [passWord, setPassWord] = useState<string>("");
   const [passWordCheck, setPassWordCheck] = useState<string>("");
@@ -75,7 +78,7 @@ const Signup = () => {
     setVisiblePassWordCheck((prev) => !prev);
   };
 
-  const handleSignUPButton = async (e:FormEvent) => {
+  const handleSignUPButton = async (e: FormEvent) => {
     e.preventDefault();
     try {
       const result = await postSignup({
@@ -91,6 +94,14 @@ const Signup = () => {
       }
     }
   };
+
+  useEffect(() => {
+    const accessToken = localStorage.getItem("accessToken");
+    if (accessToken) {
+      alert("이미 로그인 상태입니다.");
+      router.push("/");
+    }
+  }, []);
 
   return (
     <>

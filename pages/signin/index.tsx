@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import ic_kakao from "@/images/ic_kakao.png";
 import ic_google from "@/images/ic_google.png";
 import ic_hidden from "@/images/btn_visibility_off.svg";
@@ -58,6 +58,7 @@ const Signin = () => {
 
       // 로컬 스토리지에 accessToken 저장
       localStorage.setItem("accessToken", accessToken);
+      alert("로그인 성공");
       router.push("/");
     } catch (error) {
       if (error instanceof Error) {
@@ -65,6 +66,14 @@ const Signin = () => {
       }
     }
   };
+
+  useEffect(() => {
+    const accessToken = localStorage.getItem("accessToken");
+    if (accessToken) {
+      alert("이미 로그인 상태입니다.");
+      router.push("/");
+    }
+  }, []);
 
   return (
     <>
