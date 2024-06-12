@@ -9,7 +9,6 @@ const postImage: PostImage = async ({ image }) => {
   const formData = new FormData();
   formData.append("image", image);
   try {
-    const accessToken = localStorage.getItem("accessToken");
     const { data } = await axiosInstance.post<Response>(
       `images/upload`,
       formData,

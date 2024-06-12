@@ -12,7 +12,6 @@ export type PostArticle = (prop: PostArticleParams) => Promise<ArticleType>;
 
 const postArticle: PostArticle = async ({ image, content, title }) => {
   try {
-    const accessToken = localStorage.getItem("accessToken");
     if (image) {
       const imageUrl = await postImage({ image });
       const { data } = await axiosInstance.post<ArticleType>(`articles`, {
