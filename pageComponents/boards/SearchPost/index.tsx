@@ -9,20 +9,8 @@ import useLoad from "@/hooks/useLoad";
 import { getArticles } from "@/apis/getArticles";
 import useInfiniteScroll from "@/hooks/useInfiniteScroll";
 import { useRouter } from "next/router";
+import { ArticleType } from "@/constants/type";
 
-interface ArticleType {
-  id: number;
-  title: string;
-  content: string;
-  image: string | null;
-  likeCount: number;
-  createdAt: string;
-  updatedAt: string;
-  writer: {
-    id: number;
-    nickname: string;
-  };
-}
 
 const SearchPost = () => {
   const [posts, setPost] = useState<ArticleType[]>([]);

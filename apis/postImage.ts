@@ -1,4 +1,4 @@
-import { axiosInstance } from "./api";
+import axiosInstance from "./api";
 
 interface PostImageParams {
   image: File;
@@ -15,7 +15,6 @@ const postImage: PostImage = async ({ image }) => {
       formData,
       {
         headers: {
-          Authorization: `Bearer ${accessToken}`,
           "Content-Type": "multipart/form-data",
         },
       }
