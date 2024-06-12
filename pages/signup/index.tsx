@@ -81,13 +81,14 @@ const Signup = () => {
   const handleSignUPButton = async (e: FormEvent) => {
     e.preventDefault();
     try {
-      const result = await postSignup({
+      await postSignup({
         email: email,
-        nickName: nickName,
+        nickname: nickName,
         password: passWord,
         passwordConfirmation: passWordCheck,
       });
-      console.log(result);
+      alert("회원가입에 성공했습니다.");
+      router.push("/signin");
     } catch (error) {
       if (error instanceof Error) {
         alert(error.message);
