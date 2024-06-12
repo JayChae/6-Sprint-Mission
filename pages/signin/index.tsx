@@ -9,13 +9,15 @@ import Link from "next/link";
 import Image from "next/image";
 import styles from "./style.module.css";
 import postSignin from "@/apis/postSignin";
-import { FormEvent } from 'react';
+import { FormEvent } from "react";
+import { useRouter } from "next/router";
 
 const Signin = () => {
   const [email, setEmail] = useState<string>("");
   const [passWord, setPassWord] = useState<string>("");
   const [visible, setVisible] = useState<boolean>(false);
   const eyeIcon = visible ? ic_visible : ic_hidden;
+  const router = useRouter();
 
   const buttonActivate: boolean =
     validateEmailAddress(email) && validatePassword(passWord);
@@ -56,6 +58,7 @@ const Signin = () => {
 
       // 로컬 스토리지에 accessToken 저장
       localStorage.setItem("accessToken", accessToken);
+      router.push("/");
     } catch (error) {
       if (error instanceof Error) {
         alert(error.message);
