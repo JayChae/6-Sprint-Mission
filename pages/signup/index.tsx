@@ -1,20 +1,13 @@
-import { ChangeEvent, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import ic_kakao from "@/images/ic_kakao.png";
 import ic_google from "@/images/ic_google.png";
 import ic_hidden from "@/images/btn_visibility_off.svg";
 import ic_visible from "@/images/btn_visibility_on.svg";
 import logo from "@/images/login_logo.png";
-import {
-  validateEmailAddress,
-  validatePassword,
-  validateNickName,
-  validatePasswordTwice,
-} from "@/utils/validateLogin";
 import Link from "next/link";
 import Image from "next/image";
 import styles from "@/pages/signin/style.module.css";
 import postSignup from "@/apis/postSignup";
-import { FormEvent } from "react";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -28,7 +21,7 @@ interface FormValues {
 }
 
 const Signup = () => {
-  
+
   const router = useRouter();
   const resolver = yupResolver(loginSchema);
   const {

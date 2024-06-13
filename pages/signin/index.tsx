@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import ic_kakao from "@/images/ic_kakao.png";
 import ic_google from "@/images/ic_google.png";
 import ic_hidden from "@/images/btn_visibility_off.svg";
