@@ -16,13 +16,29 @@ import styles from "@/pages/signin/style.module.css";
 import postSignup from "@/apis/postSignup";
 import { FormEvent } from "react";
 import { useRouter } from "next/router";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { loginSchema } from "@/utils/schema";
+
+interface FormValues {
+  email: string;
+  password: string;
+  passwordConfirmation: string;
+  nickname: string;
+}
 
 const Signup = () => {
+  
   const router = useRouter();
-  const [email, setEmail] = useState<string>("");
-  const [passWord, setPassWord] = useState<string>("");
-  const [passWordCheck, setPassWordCheck] = useState<string>("");
-  const [nickName, setNickName] = useState<string>("");
+  const resolver = yupResolver(loginSchema);
+  const {
+    handleSubmit,
+    register,
+    formState: { errors, isValid },
+  } = useForm<FormValues>({
+    resolver,
+    mode: "onChange",
+  });
   const [visiblePassWord, setVisiblePassWord] = useState<boolean>(false);
   const [visiblePassWordCheck, setVisiblePassWordCheck] =
     useState<boolean>(false);
@@ -31,46 +47,6 @@ const Signup = () => {
     ? ic_visible
     : ic_hidden;
 
-  const buttonActivate: boolean =
-    validateEmailAddress(email) &&
-    validatePassword(passWord) &&
-    validateNickName(nickName) &&
-    validatePasswordTwice(passWord, passWordCheck);
-  const emailErrorMessage: string =
-    email === ""
-      ? "이메일을 입력해주세요"
-      : validateEmailAddress(email)
-      ? ""
-      : "잘못된 이메일 형식입니다";
-  const passWordErrorMessage: string =
-    passWord === ""
-      ? "비밀번호 재입력해주세요"
-      : validatePassword(passWord)
-      ? ""
-      : "비밀번호를 8자 이상 입력해주세요";
-  const passWordCheckErrorMessage: string = validatePasswordTwice(
-    passWord,
-    passWordCheck
-  )
-    ? ""
-    : "비밀번호가 일치하지 않습니다";
-
-  const nickNameErrorMessage: string = validateNickName(nickName)
-    ? ""
-    : "닉네임을 입력해주세요";
-
-  const handleEmailInput = (e: ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value);
-  };
-  const handleNickNameInput = (e: ChangeEvent<HTMLInputElement>) => {
-    setNickName(e.target.value);
-  };
-  const handlePassWordInput = (e: ChangeEvent<HTMLInputElement>) => {
-    setPassWord(e.target.value);
-  };
-  const handlePassWordCheckInput = (e: ChangeEvent<HTMLInputElement>) => {
-    setPassWordCheck(e.target.value);
-  };
   const handleVisiblePassWordBtn = () => {
     setVisiblePassWord((prev) => !prev);
   };
@@ -78,15 +54,9 @@ const Signup = () => {
     setVisiblePassWordCheck((prev) => !prev);
   };
 
-  const handleSignUPButton = async (e: FormEvent) => {
-    e.preventDefault();
+  const handleSignUP = handleSubmit(async (data: FormValues) => {
     try {
-      await postSignup({
-        email: email,
-        nickname: nickName,
-        password: passWord,
-        passwordConfirmation: passWordCheck,
-      });
+      await postSignup(data);
       alert("회원가입에 성공했습니다.");
       router.push("/signin");
     } catch (error) {
@@ -94,7 +64,7 @@ const Signup = () => {
         alert(error.message);
       }
     }
-  };
+  });
 
   useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
@@ -115,21 +85,19 @@ const Signup = () => {
       </div>
       <main className={styles.sign_main}>
         <div className={styles.login_content}>
-          <form className={styles.login_form}>
+          <form className={styles.login_form} onSubmit={handleSignUP}>
             <div className={styles.user_input}>
               <div className={styles.user_input_section}>
                 <label htmlFor="userEmail">이메일</label>
                 <input
                   id="userEmail"
                   type="email"
-                  name="userEmail"
                   placeholder="이메일을 입력해주세요"
-                  value={email}
-                  onChange={handleEmailInput}
+                  {...register("email")}
                 />
               </div>
               <span className={styles.input_err_message}>
-                {emailErrorMessage}
+                {errors.email?.message}
               </span>
             </div>
             <div className={styles.user_input}>
@@ -138,14 +106,12 @@ const Signup = () => {
                 <input
                   id="userNickName"
                   type="text"
-                  name="userNickName"
                   placeholder="닉네임을 입력해주세요"
-                  value={nickName}
-                  onChange={handleNickNameInput}
+                  {...register("nickname")}
                 />
               </div>
               <span className={styles.input_err_message}>
-                {nickNameErrorMessage}
+                {errors.nickname?.message}
               </span>
             </div>
             <div className={styles.user_input}>
@@ -154,10 +120,8 @@ const Signup = () => {
                 <input
                   id="userPassword"
                   type={visiblePassWord ? "text" : "password"}
-                  name="userPassword"
                   placeholder="비밀번호를 입력해주세요"
-                  value={passWord}
-                  onChange={handlePassWordInput}
+                  {...register("password")}
                 />
                 <Image
                   src={eyeIconPassWord}
@@ -167,7 +131,7 @@ const Signup = () => {
                 />
               </div>
               <span className={styles.input_err_message}>
-                {passWordErrorMessage}
+                {errors.password?.message}
               </span>
             </div>
             <div className={styles.user_input}>
@@ -176,10 +140,8 @@ const Signup = () => {
                 <input
                   id="userPasswordCheck"
                   type={visiblePassWordCheck ? "text" : "password"}
-                  name="userPasswordCheck"
                   placeholder="비밀번호를 다시 한 번 입력해주세요"
-                  value={passWordCheck}
-                  onChange={handlePassWordCheckInput}
+                  {...register("passwordConfirmation")}
                 />
                 <Image
                   src={eyeIconPassWordCheck}
@@ -189,10 +151,10 @@ const Signup = () => {
                 />
               </div>
               <span className={styles.input_err_message}>
-                {passWordCheckErrorMessage}
+                {errors.passwordConfirmation?.message}
               </span>
             </div>
-            <button disabled={!buttonActivate} onClick={handleSignUPButton}>
+            <button disabled={!isValid} type="submit">
               회원가입
             </button>
           </form>
